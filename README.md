@@ -1,2 +1,2 @@
-# OT2-Robot-DNA-extraction-protocol
+# OT2-Robot_DNA-extraction-protocol
 A protocol using the Opentrons Python API to automate an OT2 robot to extract DNA from leafs samples using the CTAB extraction method
