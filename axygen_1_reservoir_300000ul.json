@@ -1,0 +1,64 @@
+{
+    "ordering": [
+        [
+            "A1"
+        ]
+    ],
+    "brand": {
+        "brand": "Axygen",
+        "brandId": [
+            "VWR-Axygen/Catalog #47743-954"
+        ]
+    },
+    "metadata": {
+        "displayName": "Axygen 1 Reservoir 300000 µL",
+        "displayCategory": "reservoir",
+        "displayVolumeUnits": "µL",
+        "tags": []
+    },
+    "dimensions": {
+        "xDimension": 127.76,
+        "yDimension": 85.57,
+        "zDimension": 45
+    },
+    "wells": {
+        "A1": {
+            "depth": 42,
+            "totalLiquidVolume": 300000,
+            "shape": "rectangular",
+            "xDimension": 107,
+            "yDimension": 71,
+            "x": 63.7,
+            "y": 43.57,
+            "z": 3
+        }
+    },
+    "groups": [
+        {
+            "metadata": {
+                "wellBottomShape": "flat"
+            },
+            "wells": [
+                "A1"
+            ]
+        }
+    ],
+    "parameters": {
+        "format": "irregular",
+        "quirks": [
+            "centerMultichannelOnWells",
+            "touchTipDisabled"
+        ],
+        "isTiprack": false,
+        "isMagneticModuleCompatible": false,
+        "loadName": "axygen_1_reservoir_300000ul"
+    },
+    "namespace": "custom_beta",
+    "version": 1,
+    "schemaVersion": 2,
+    "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+}
