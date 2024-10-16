@@ -365,8 +365,8 @@ def run(ctx):
         ctx.pause('''Place Water reservoir on site 6''')
         ctx.pause('''Start Chloroform dispensing and mixing to samples plate on site 1''')
 
-        comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
-        ctx.pause(comment)
+        #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
+        #ctx.pause(comment)
 
         dispensing_chloroform_and_mixing(start_tiprack = tiprack_1)
 
@@ -486,8 +486,8 @@ def run(ctx):
             ctx.pause('''Remove Extraction buffer reservoir on site 3, place Chloroform reservoir on sit 3 and place Water reservoir on site 11''')
             ctx.pause('''Start Chloroform dispensing to plates on site 1 & 2''')
             
-            comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
-            ctx.pause(comment)
+            #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
+            #ctx.pause(comment)
 
             dispensing_chloroform_and_mixing(start_tiprack = tiprack_1)
 
