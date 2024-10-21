@@ -4,7 +4,7 @@ The v4.5 version uses smaller volumes to avoid pipetting twice the same liquid.
 The "liquid-cap" during chloroform dispensing is also implemented to get rid of filtered tips.
 '''
 
-# see
+# see this link to have a visual upport of plate positions and all the relevant steps of this protocol
 # https://docs.google.com/presentation/d/1JAKohkoa89mKwnr0rshk1j7QGQOGtWpTiSLGF0zlCcg/edit#slide=id.g1f2df41ff5d_0_17
 
 ############################################################
@@ -14,10 +14,10 @@ first_column_plate_1 = 1
 last_column_plate_1  = 12
 first_column_plate_2 = 1
 last_column_plate_2  = 12
-first_column_plate_3 = 0
-last_column_plate_3  = 0
-first_column_plate_4 = 0
-last_column_plate_4  = 0
+first_column_plate_3 = 1
+last_column_plate_3  = 12
+first_column_plate_4 = 1
+last_column_plate_4  = 12
 
 tipsbox = 'vwrnonfiltered_96_tiprack_300ul'             # tipsbox or 'vwrbox_96_tiprack_300ul' or 'vwrnonfiltered_96_tiprack_300ul' ...
 samples_plate_type = '1.2ml_simport_vwr_t1102_96well'   # Enter the API name for the plates in which the samples were collected ('3axygen96wellminitubesystemcorning_96_wellplate_1320ul' OR '1.2ml_simport_vwr_t1102_96well' )
@@ -97,7 +97,7 @@ def run(ctx):
         p300.return_tip()
 
     def post_grinding_buffer_dispense():
-        p300.pick_up_tip()
+        p300.pick_up_tip(tiprack_1.wells()[0])
         for plate in plates:
             for d in plate:
                 p300.aspirate(buffer_volume -50, reservoir_01.bottom(z = 3), rate = 0.8)
@@ -329,8 +329,8 @@ def run(ctx):
         samples_P1 = samples_plate_1.rows()[0][first_column_plate_1 - 1:last_column_plate_1]
         plates = [samples_P1]
 
-        buffer_chloroform_tiprack_1 = tiprack_1.rows()[0][first_column_plate_1 - 1:last_column_plate_1]
-        buffer_chloroform_tipracks = [buffer_chloroform_tiprack_1]
+        #buffer_chloroform_tiprack_1 = tiprack_1.rows()[0][first_column_plate_1 - 1:last_column_plate_1]
+        #buffer_chloroform_tipracks = [buffer_chloroform_tiprack_1]
 
         final_plate_01 = final_plate_1.rows()[0][first_column_plate_1 - 1:last_column_plate_1]
         final_plates = [final_plate_01]
@@ -449,9 +449,9 @@ def run(ctx):
             samples_P2 = samples_plate_2.rows()[0][first_column_plate_2 - 1 : last_column_plate_2]
             plates = [samples_P1, samples_P2]
             
-            buffer_chloroform_tiprack_1 = tiprack_1.rows()[0][first_column_plate_1 - 1:last_column_plate_1]
-            buffer_chloroform_tiprack_2 = tiprack_2.rows()[0][first_column_plate_2 - 1:last_column_plate_2]
-            buffer_chloroform_tipracks = [buffer_chloroform_tiprack_1, buffer_chloroform_tiprack_2]
+            #buffer_chloroform_tiprack_1 = tiprack_1.rows()[0][first_column_plate_1 - 1:last_column_plate_1]
+            #buffer_chloroform_tiprack_2 = tiprack_2.rows()[0][first_column_plate_2 - 1:last_column_plate_2]
+            #buffer_chloroform_tipracks = [buffer_chloroform_tiprack_1, buffer_chloroform_tiprack_2]
             
             final_plate_01 = final_plate_1.rows()[0][first_column_plate_1 - 1 : last_column_plate_1]
             final_plate_02 = final_plate_2.rows()[0][first_column_plate_2 - 1 : last_column_plate_2]
@@ -600,14 +600,15 @@ def run(ctx):
                 pre_grinding_buffer_dispense()
                 
                 ctx.pause('''Grind samples on a tyssus-lyser machine''')
-                ctx.pause('''After grinding, place the plate back on site 1, 2, 3 and 7 ''')
-                ctx.pause('''Start post-grinding Extraction buffer dispensing to samples on site 1, 2, 3 and 7''')
+                ctx.pause('''After grinding, place the plate back on site 1, 2 and 3 ''')
+                ctx.pause('''Start post-grinding Extraction buffer dispensing to samples on site 1, 2 and 3''')
                 
+                #p300.starting_tip = tiprack_1.wells()[0]
                 post_grinding_buffer_dispense()
                 
                 ctx.pause('''Incubate the plates (65C, 30 min)''')
-                ctx.pause('''After the 30 minute incubation, place the plate back on site 1, 2, 3 and 7 ''')
-                ctx.pause('''Remove Extraction buffer reservoir on site 11, place Chloroform reservoir on sit 1 and place Water reservoir on site 10''')
+                ctx.pause('''After the 30 minute incubation, place the plate back on site 1, 2 and 3 ''')
+                ctx.pause('''Remove Extraction buffer reservoir on site 11, place Chloroform reservoir on site 1 and place Water reservoir on site 10''')
                 ctx.pause('''Start Chloroform dispensing and mixing to plates''')
                 
                 #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
@@ -636,8 +637,8 @@ def run(ctx):
 
                 ctx.pause('''When the 10 minutes centrifugation is done place the "starting sample plates" back on sites 1, 2 and 3 and the T110-2 plate with Isopropanol added should be on site 4, 5 and 6''')               
                 
-                comment = string1 + string2 + str(truncate(time_supernatant_transfer_and_mixing * total_number_of_columns / 60), 1) + string3 + string1
-                ctx.pause(comment)
+                #comment = string1 + string2 + str(truncate(time_supernatant_transfer_and_mixing * total_number_of_columns / 60), 1) + string3 + string1
+                #ctx.pause(comment)
                 
                 ctx.pause('''Start supernatant transfer from starting plates to final plates''')
 
@@ -653,13 +654,14 @@ def run(ctx):
                     isopropanol_discarding(final, tiprack)
 
                 ctx.pause('''Remove Isopropanol reservoir on site 10, add Ethanol 70 percent reservoir to site 10''')
+                ctx.move_labware(labware = water_reservoir, new_location = protocol_api.OFF_DECK)
+                ctx.move_labware(labware = tiprack_9, new_location = 11)
                 ctx.pause('''Start Ethanol dispensing to plates on site 4, 5, 6''')
 
                 p300.starting_tip = tiprack_9.wells_by_name()['A1']
 
                 ethanol_dispensing()
 
-                
                 ctx.pause('''Centrifugate the plates for 10 minutes at 6000 rpm''')
                 ctx.pause('''When the 10 minute centrifugation is done, place the plate back on site 4 & 5 to discard ethanol with the robot''')
                 ctx.pause('''Start discarding the ethanol on site 4 & 5''')
