@@ -85,28 +85,25 @@ def run(ctx):
 
 # Defining the functions executed in the protocols
     
-    def pre_grinding_buffer_dispense():
+    def pre_grinding_water_dispense():
         p300.pick_up_tip()
         for plate in plates:
             for d in plate:
-                p300.aspirate(50, reservoir_01.bottom(z = 3), rate = 0.8)
-                time.sleep(1)
+                p300.aspirate(50, water_reservoir_01.bottom(z = 2.5), rate = 1)
                 p300.air_gap(5)
                 p300.dispense(50 + 5, d.top(2), rate = 2)
-                #p300.blow_out(d.top(2)) # useless, it just creates bubles on the tips end
         p300.return_tip()
 
     def post_grinding_buffer_dispense():
         p300.pick_up_tip(tiprack_1.wells()[0])
         for plate in plates:
             for d in plate:
-                p300.aspirate(buffer_volume -50, reservoir_01.bottom(z = 3), rate = 0.8)
+                p300.aspirate(buffer_volume, reservoir_01.bottom(z = 3), rate = 0.8)
                 time.sleep(1)
                 p300.air_gap(5)
-                p300.dispense(buffer_volume - 45, d.top(2), rate = 2)
+                p300.dispense(buffer_volume + 5, d.top(2), rate = 2)
                 #p300.blow_out(d.top(2)) # useless, it creates bubles on the tips end
         p300.return_tip()         
-
     
     def dispensing_chloroform_and_mixing(start_tiprack):                            # start_tiprack = tiprack_1
                                                                                                                                                               
@@ -173,7 +170,6 @@ def run(ctx):
         p300.return_tip()
 
     time_isopropanol_dispensing = 5                                 # Defining a time (s) variable to calculate the duration of the step
-
     
     def supernatant_transfer_and_mix(samples_plate, final_plate, transfer_tiprack):
 
@@ -206,7 +202,6 @@ def run(ctx):
 
     time_supernatant_transfer_and_mixing = 30   
 
-
     def isopropanol_discarding(final_plate, transfer_tiprack):
         for s, t in zip(final_plate, transfer_tiprack):
             p300.pick_up_tip(location = t)
@@ -230,7 +225,6 @@ def run(ctx):
             p300.blow_out(location = trash)
             p300.drop_tip(location = t)                                         # Drop_tip with no arguments will drop the tips in the trash.
          
-
     def ethanol_dispensing():
         p300.pick_up_tip()
         for plate in final_plates:
@@ -263,7 +257,6 @@ def run(ctx):
 
     time_ethanol_discarding = 30                       # Defining a time (s) variable to calculate the duration of the step
 
-
     def EBbuffer_dispensing():
             p300.pick_up_tip()    
             for plate in final_plates:   
@@ -273,7 +266,6 @@ def run(ctx):
                     p300.dispense(elution_buffer_volume + 10, f.top(0))
                     p300.blow_out(f.top(1))
             p300.drop_tip()
-
 
     def truncate(n, decimals=0):                # This function is used to round decimal number for time calculation
         multiplier = 10**decimals
@@ -348,13 +340,14 @@ def run(ctx):
         ########################
         ctx.pause('''Turn on and set incubator bath at 65C''')
         ctx.pause('''Setup: Samples_plates (site 1), tipracks (site 2, 5 & 7)''')
-        ctx.pause('''When the Extraction Buffer is ready; place it in a reservoir on site 3''')
-        ctx.pause('''Start "pre-grinding" dispensing of extraction buffer to samples on site 1''')
+        ctx.pause('''Place DD-water reservoir on site 6''')
+        ctx.pause('''Start "pre-grinding" water dispensing  to samples on site 1''')
 
-        pre_grinding_buffer_dispense()
+        pre_grinding_water_dispense()
 
         ctx.pause('''Grind samples on a tyssus-lyser machine''')
         ctx.pause('''Place plate back to site 1 and continue adding extraction buffer to samples''')
+        ctx.pause('''Place buffer reservoir on site 3''')
         ctx.pause('''Start post-grinding Extraction buffer dispensing to samples on site 1''')
 
         post_grinding_buffer_dispense()
@@ -362,7 +355,6 @@ def run(ctx):
         ctx.pause('''Incubate the plate (65C, 30 min)''')
         ctx.pause('''After the 30 minute incubation, place the plate back on site 1 ''')
         ctx.pause('''Remove Extraction buffer reservoir on site 3 and place Chloroform reservoir on site 3''')
-        ctx.pause('''Place Water reservoir on site 6''')
         ctx.pause('''Start Chloroform dispensing and mixing to samples plate on site 1''')
 
         #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
@@ -470,20 +462,21 @@ def run(ctx):
             ctx.pause('''Turn on and set incubator bath at 65C''')
             ctx.pause('''Place Samples plates on sites 1 & 2 and write down the site on the plate (Ex: Plate-AA = Site-1, Plate-BB = Site-2 ...)''')
             ctx.pause('''Place tip racks on site 6, 7, 8, 9 and 10''')
-            ctx.pause('''Place Extraction buffer reservoir on site 3''')
-            ctx.pause('''Start "pre-grinding" dispensing of extraction buffer to samples''')
+            ctx.pause('''Place DD-water reservoir on site 11''')
+            ctx.pause('''Start "pre-grinding" water dispensing to samples''')
             
-            pre_grinding_buffer_dispense()
+            pre_grinding_water_dispense()
             
             ctx.pause('''Grind samples on a tyssus-lyser machine''')
             ctx.pause('''Place plate back to site 1 & 2 and continue adding extraction buffer to samples''')
+            ctx.pause('''Place Extraction buffer reservoir on site 3''')
             ctx.pause('''Start dispensing of Extraction buffer to samples''')
 
             post_grinding_buffer_dispense()
 
             ctx.pause('''Place the plates at 65 celsius in water bath for 30 minutes''')
             ctx.pause('''When the 30 minutes incubation is done, place the samples plates back on site 1 & 2''')
-            ctx.pause('''Remove Extraction buffer reservoir on site 3, place Chloroform reservoir on sit 3 and place Water reservoir on site 11''')
+            ctx.pause('''Remove Extraction buffer reservoir on site 3, place Chloroform reservoir on site 3''')
             ctx.pause('''Start Chloroform dispensing to plates on site 1 & 2''')
             
             #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
@@ -594,13 +587,14 @@ def run(ctx):
                 ctx.pause('''Turn on and set incubator bath at 65C''')
                 ctx.pause('''Place Samples plates on sites 1, 2, 3, 7 and write down the site on the plate (Ex: Plate-AA = Site-1, Plate-BB = Site-2 ...)''')
                 ctx.pause('''Place tip racks on site 5, 6, 8 and 9''')
-                ctx.pause('''Place Extraction buffer reservoir on site 11''')
-                ctx.pause('''Start pre-grinding dispensing of extraction buffer to samples''')
+                ctx.pause('''Place DD-water reservoir on site 11''')
+                ctx.pause('''Start pre-grinding water dispensing to samples''')
                 
-                pre_grinding_buffer_dispense()
+                pre_grinding_water_dispense()
                 
                 ctx.pause('''Grind samples on a tyssus-lyser machine''')
                 ctx.pause('''After grinding, place the plate back on site 1, 2 and 3 ''')
+                ctx.pause('''Place Extraction buffer reservoir on site 10''')
                 ctx.pause('''Start post-grinding Extraction buffer dispensing to samples on site 1, 2 and 3''')
                 
                 #p300.starting_tip = tiprack_1.wells()[0]
@@ -608,7 +602,7 @@ def run(ctx):
                 
                 ctx.pause('''Incubate the plates (65C, 30 min)''')
                 ctx.pause('''After the 30 minute incubation, place the plate back on site 1, 2 and 3 ''')
-                ctx.pause('''Remove Extraction buffer reservoir on site 11, place Chloroform reservoir on site 1 and place Water reservoir on site 10''')
+                ctx.pause('''Remove Extraction buffer reservoir on site 11, place Chloroform reservoir on site 1''')
                 ctx.pause('''Start Chloroform dispensing and mixing to plates''')
                 
                 #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
@@ -736,13 +730,14 @@ def run(ctx):
                     ctx.pause('''Turn on and set incubator bath at 65C''')
                     ctx.pause('''Place Samples plates on sites 1, 2, 3 and write down the site on the plate (Ex: Plate-AA = Site-1, Plate-BB = Site-2 ...)''')
                     ctx.pause('''Place tip racks on site 7, 8 and 9''')
-                    ctx.pause('''Place Extraction buffer reservoir on site 10''')
-                    ctx.pause('''Start pre-grinding extraction buffer dispensing''')
+                    ctx.pause('''Place DD-water reservoir on site 10''')
+                    ctx.pause('''Start pre-grinding water dispensing''')
 
-                    pre_grinding_buffer_dispense()
+                    pre_grinding_water_dispense()
 
                     ctx.pause('''Grind samples on a tyssus-lyser machine''')
                     ctx.pause('''After grinding, place the plate back on site 1, 2, 3 ''')
+                    ctx.pause('''Place Extraction buffer reservoir on site 11''')
                     ctx.pause('''Start post-grinding Extraction buffer dispensing''')
 
                     post_grinding_buffer_dispense()
