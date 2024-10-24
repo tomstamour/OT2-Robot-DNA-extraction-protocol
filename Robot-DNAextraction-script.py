@@ -11,13 +11,13 @@ The "liquid-cap" during chloroform dispensing is also implemented to get rid of 
 # Enter your values at lines 11 to 18
 ############################################################
 first_column_plate_1 = 1
-last_column_plate_1  = 12
+last_column_plate_1  = 10
 first_column_plate_2 = 1
-last_column_plate_2  = 12
-first_column_plate_3 = 1
-last_column_plate_3  = 12
-first_column_plate_4 = 1
-last_column_plate_4  = 12
+last_column_plate_2  = 7
+first_column_plate_3 = 0
+last_column_plate_3  = 0
+first_column_plate_4 = 0
+last_column_plate_4  = 0
 
 tipsbox = 'vwrnonfiltered_96_tiprack_300ul'             # tipsbox or 'vwrbox_96_tiprack_300ul' or 'vwrnonfiltered_96_tiprack_300ul' ...
 samples_plate_type = '1.2ml_simport_vwr_t1102_96well'   # Enter the API name for the plates in which the samples were collected ('3axygen96wellminitubesystemcorning_96_wellplate_1320ul' OR '1.2ml_simport_vwr_t1102_96well' )
@@ -176,9 +176,9 @@ def run(ctx):
         for s, d, t in zip(samples_plate, final_plate, transfer_tiprack):
             p300.pick_up_tip(location = t)
             p300.move_to(s.top(-16), speed = 400)
-            p300.move_to(s.bottom(z = distance_interstice_to_bottom + 3.5), speed = 10)            # The z value is the distance to avoid touching the water-Chloroform interstice
+            p300.move_to(s.bottom(z = distance_interstice_to_bottom + 2.5), speed = 10)            # The z value is the distance to avoid touching the water-Chloroform interstice
             p300.aspirate(volume_1, s.bottom(z = distance_interstice_to_bottom + 3.5), rate = 0.2)      # The z value is the distance to avoid touching the water-Chloroform interstice
-            p300.move_to(s.bottom(z = distance_interstice_to_bottom + 1.5), speed = 7)            # The z value is the distance to avoid touching the water-Chloroform interstice
+            p300.move_to(s.bottom(z = distance_interstice_to_bottom + 0.75), speed = 7)            # The z value is the distance to avoid touching the water-Chloroform interstice
             p300.aspirate(volume_2, s.bottom(z = distance_interstice_to_bottom + 1.5), rate = 0.1)      # The z value is the distance to avoid touching the water-Chloroform interstice
             p300.air_gap(5)
             p300.default_speed = 400
@@ -206,17 +206,17 @@ def run(ctx):
         for s, t in zip(final_plate, transfer_tiprack):
             p300.pick_up_tip(location = t)
             
-            p300.move_to(location = s.bottom(10), speed = 400)         # Set this location to 1 mm above ethanol surface from the bottom of the 0.6 ml tube               
-            p300.aspirate(location =  s.bottom(z = 10), volume = 245, rate = 0.2)
+            p300.move_to(location = s.bottom(8), speed = 400)         # Set this location to 1 mm above ethanol surface from the bottom of the 0.6 ml tube               
+            p300.aspirate(location =  s.bottom(z = 8), volume = 245, rate = 0.2)
             
-            p300.move_to(location = s.bottom(z = 5), speed = 10)            
-            p300.aspirate(location = s.bottom(z = 5), volume = 30, rate = 0.1)
+            p300.move_to(location = s.bottom(z = 4), speed = 10)            
+            p300.aspirate(location = s.bottom(z = 4), volume = 30, rate = 0.1)
             
-            p300.move_to(location = s.bottom(z = 3.5), speed = 10)            
-            p300.aspirate(location = s.bottom(z = 3.5), volume = 10, rate = 0.05)
+            p300.move_to(location = s.bottom(z = 3), speed = 10)            
+            p300.aspirate(location = s.bottom(z = 3), volume = 10, rate = 0.05)
             
-            p300.move_to(location = s.bottom(z = 2.5), speed = 10)            
-            p300.aspirate(location = s.bottom(z = 2.5), volume = 5, rate = 0.02)
+            p300.move_to(location = s.bottom(z = 2), speed = 10)            
+            p300.aspirate(location = s.bottom(z = 2), volume = 5, rate = 0.02)
             
             p300.air_gap(5)
             
@@ -232,7 +232,7 @@ def run(ctx):
                 center_location = f.center()
                 p300.aspirate(290, reservoir_01.bottom(z = 2.5))
                 p300.air_gap(10)
-                p300.dispense(300, center_location.move(types.Point(x = 1, y = 1, z = 18)), rate = 0.5) # Dispensing on the sidewall to avoid detachment of the DNA pellet at the bottom of the tubes.
+                p300.dispense(300, center_location.move(types.Point(x = 1, y = 1, z = 18)), rate = 0.2) # Dispensing on the sidewall to avoid detachment of the DNA pellet at the bottom of the tubes.
                 p300.blow_out(f.top())
         p300.drop_tip()
 
@@ -240,14 +240,14 @@ def run(ctx):
         for s, t in zip(final_plate, transfer_tiprack):
             p300.pick_up_tip(location = t)
             
-            p300.move_to(location = s.bottom(8), speed = 400)         
-            p300.aspirate(location = s.bottom(8), volume = 200, rate = 0.2)
+            p300.move_to(location = s.bottom(7), speed = 400)         
+            p300.aspirate(location = s.bottom(7), volume = 200, rate = 0.2)
             
-            p300.move_to(location = s.bottom(z = 4), speed = 20)            
-            p300.aspirate(location = s.bottom(z = 4), volume = 70, rate = 0.05)
+            p300.move_to(location = s.bottom(z = 3), speed = 20)            
+            p300.aspirate(location = s.bottom(z = 3), volume = 70, rate = 0.05)
             
-            p300.move_to(location = s.bottom(z = 1.5), speed = 10)            
-            p300.aspirate(location = s.bottom(z = 1.5), volume = 25, rate = 0.02)
+            p300.move_to(location = s.bottom(z = 2), speed = 10)            
+            p300.aspirate(location = s.bottom(z = 2), volume = 25, rate = 0.02)
             
             p300.air_gap(5)
             
