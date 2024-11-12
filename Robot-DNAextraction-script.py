@@ -1,6 +1,6 @@
 # DNA extraction protocol fot the OT-2 robot. 
 '''
-The v4.5 version uses smaller volumes to avoid pipetting twice the same liquid. 
+This version uses smaller volumes to avoid pipetting twice the same liquid. 
 The "liquid-cap" during chloroform dispensing is also implemented to get rid of filtered tips.
 '''
 
@@ -8,19 +8,19 @@ The "liquid-cap" during chloroform dispensing is also implemented to get rid of 
 # https://docs.google.com/presentation/d/1JAKohkoa89mKwnr0rshk1j7QGQOGtWpTiSLGF0zlCcg/edit#slide=id.g1f2df41ff5d_0_17
 
 ############################################################
-# Enter your values at lines 11 to 18
+# Enter your values at lines 13 to 20
 ############################################################
 first_column_plate_1 = 1
-last_column_plate_1  = 10
+last_column_plate_1  = 12
 first_column_plate_2 = 1
-last_column_plate_2  = 7
-first_column_plate_3 = 0
-last_column_plate_3  = 0
-first_column_plate_4 = 0
-last_column_plate_4  = 0
+last_column_plate_2  = 12
+first_column_plate_3 = 1
+last_column_plate_3  = 12
+first_column_plate_4 = 1
+last_column_plate_4  = 12
 
 tipsbox = 'vwrnonfiltered_96_tiprack_300ul'             # tipsbox or 'vwrbox_96_tiprack_300ul' or 'vwrnonfiltered_96_tiprack_300ul' ...
-samples_plate_type = '1.2ml_simport_vwr_t1102_96well'   # Enter the API name for the plates in which the samples were collected ('3axygen96wellminitubesystemcorning_96_wellplate_1320ul' OR '1.2ml_simport_vwr_t1102_96well' )
+samples_plate_type = '3axygen96wellminitubesystemcorning_96_wellplate_1320ul'   # Enter the API name for the plates in which the samples were collected ('3axygen96wellminitubesystemcorning_96_wellplate_1320ul' OR '1.2ml_simport_vwr_t1102_96well' )
 elution_buffer_volume = 30                              # Set the volume of Elution buffer (EB buffer) that will be used to resuspend yor DNA after isolation
 reservoir_type = 'axygen_1_reservoir_300000ul'
 
@@ -34,7 +34,7 @@ from opentrons import types
 import math
 import time
 
-metadata = {'protocolName': 'DNA extraction protocol v4.5 -- MiniVols --', 'apiLevel': '2.15'}
+metadata = {'protocolName': 'Robot-DNAextraction-script -- MiniVols --', 'apiLevel': '2.15'}
 
 def get_values(*names):
     import json
@@ -92,6 +92,7 @@ def run(ctx):
                 p300.aspirate(50, water_reservoir_01.bottom(z = 2.5), rate = 1)
                 p300.air_gap(5)
                 p300.dispense(50 + 5, d.top(2), rate = 2)
+                p300.blow_out(d.top(2))
         p300.return_tip()
 
     def post_grinding_buffer_dispense():
@@ -100,8 +101,8 @@ def run(ctx):
             for d in plate:
                 p300.aspirate(buffer_volume, reservoir_01.bottom(z = 3), rate = 0.8)
                 time.sleep(1)
-                p300.air_gap(5)
-                p300.dispense(buffer_volume + 5, d.top(2), rate = 2)
+                p300.air_gap(10)
+                p300.dispense(buffer_volume + 10, d.top(2), rate = 2)
                 #p300.blow_out(d.top(2)) # useless, it creates bubles on the tips end
         p300.return_tip()         
     
@@ -197,6 +198,8 @@ def run(ctx):
             center_location = d.center()
             p300.blow_out(center_location.move(types.Point(x = 1, y = 4, z = 16.5)))
             p300.blow_out(center_location.move(types.Point(x = 1, y = -4, z = 16.5)))
+            p300.blow_out(center_location.move(types.Point(x = 1, y = 4, z = 16.5)))
+            p300.blow_out(center_location.move(types.Point(x = 1, y = -4, z = 16.5)))
             #p300.drop_tip()                                       # Drop_tip with no arguments will drop the tips in the trash.     
             p300.drop_tip(location = t)                            # This will return the tip in the tip rack at the same location were it was attached. This can be usefull if we would like to reuse the tips for removing isopropanol and ethanol from wash.
 
@@ -232,7 +235,7 @@ def run(ctx):
                 center_location = f.center()
                 p300.aspirate(290, reservoir_01.bottom(z = 2.5))
                 p300.air_gap(10)
-                p300.dispense(300, center_location.move(types.Point(x = 1, y = 1, z = 18)), rate = 0.2) # Dispensing on the sidewall to avoid detachment of the DNA pellet at the bottom of the tubes.
+                p300.dispense(300, center_location.move(types.Point(x = 1, y = 1, z = 18)), rate = 0.1) # Dispensing on the sidewall to avoid detachment of the DNA pellet at the bottom of the tubes.
                 p300.blow_out(f.top())
         p300.drop_tip()
 
@@ -244,10 +247,13 @@ def run(ctx):
             p300.aspirate(location = s.bottom(7), volume = 200, rate = 0.2)
             
             p300.move_to(location = s.bottom(z = 3), speed = 20)            
-            p300.aspirate(location = s.bottom(z = 3), volume = 70, rate = 0.05)
+            p300.aspirate(location = s.bottom(z = 3), volume = 40, rate = 0.09)
+
+            p300.move_to(location = s.bottom(z = 2), speed = 20)            
+            p300.aspirate(location = s.bottom(z = 2), volume = 30, rate = 0.04)
             
-            p300.move_to(location = s.bottom(z = 2), speed = 10)            
-            p300.aspirate(location = s.bottom(z = 2), volume = 25, rate = 0.02)
+            p300.move_to(location = s.bottom(z = 1), speed = 10)            
+            p300.aspirate(location = s.bottom(z = 1), volume = 25, rate = 0.01)
             
             p300.air_gap(5)
             
@@ -585,8 +591,8 @@ def run(ctx):
                 water_reservoir_01 = water_reservoir.wells()[0]
 
                 ctx.pause('''Turn on and set incubator bath at 65C''')
-                ctx.pause('''Place Samples plates on sites 1, 2, 3, 7 and write down the site on the plate (Ex: Plate-AA = Site-1, Plate-BB = Site-2 ...)''')
-                ctx.pause('''Place tip racks on site 5, 6, 8 and 9''')
+                ctx.pause('''Place Samples plates on sites 1, 2 and 3 and write down the site on the plate (Ex: Plate-AA = Site-1, Plate-BB = Site-2 ...)''')
+                ctx.pause('''Place tip racks on site 7, 8 and 9''')
                 ctx.pause('''Place DD-water reservoir on site 11''')
                 ctx.pause('''Start pre-grinding water dispensing to samples''')
                 
@@ -602,7 +608,7 @@ def run(ctx):
                 
                 ctx.pause('''Incubate the plates (65C, 30 min)''')
                 ctx.pause('''After the 30 minute incubation, place the plate back on site 1, 2 and 3 ''')
-                ctx.pause('''Remove Extraction buffer reservoir on site 11, place Chloroform reservoir on site 1''')
+                ctx.pause('''Remove Extraction buffer reservoir on site 10, place Chloroform reservoir on site 10''')
                 ctx.pause('''Start Chloroform dispensing and mixing to plates''')
                 
                 #comment = string1 + string2 + str(truncate((time_dispensing_chloroform * total_number_of_columns / 60) + (time_dispensing_chloroform_and_mixing * total_number_of_columns / 60), 1)) + string3 + string1
@@ -657,15 +663,15 @@ def run(ctx):
                 ethanol_dispensing()
 
                 ctx.pause('''Centrifugate the plates for 10 minutes at 6000 rpm''')
-                ctx.pause('''When the 10 minute centrifugation is done, place the plate back on site 4 & 5 to discard ethanol with the robot''')
-                ctx.pause('''Start discarding the ethanol on site 4 & 5''')
+                ctx.pause('''When the 10 minute centrifugation is done, place the plate back on site 4, 5 & 6 to discard ethanol with the robot''')
+                ctx.pause('''Start discarding the ethanol on site 4, 5 & 6''')
 
                 for final, tiprack in zip(final_plates, transfer_tipracks):
                     ethanol_discarding(final, tiprack)
 
                 ctx.pause('''Evaporate residual ethanol for X minutes at 45 degrees celsius''')
-                ctx.pause('''Prepare for EB buffer dispensing: remove Ethanol reservoir on site 3, EB buffer on site 3''')
-                ctx.pause('''When evaporation is done, place plates back to site 4 & 5''')
+                ctx.pause('''Prepare for EB buffer dispensing: remove Ethanol reservoir on site 10, EB buffer on site 10''')
+                ctx.pause('''When evaporation is done, place plates back to site 4, 5 & 6''')
                 ctx.pause('''Start EB buffer dispensing''')
 
                 EBbuffer_dispensing()
